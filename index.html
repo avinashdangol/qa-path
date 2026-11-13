@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QA Path: free QA course by Avinash Dangol</title>
+<meta name="description" content="A free, plain-English course from zero to your first junior QA job: manual testing, Playwright automation and AI skills. Created by Avinash Dangol.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐞</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F6F9; --surface:#FFFFFF; --ink:#16233A; --muted:#566781; --line:#D6DEE8;
+  --pass:#1C7F53; --pass-soft:#E2F4EA; --bug:#9A5B00; --bug-bar:#D99000; --bug-soft:#FFF3D9;
+  --accent:#2A52C4; --accent-soft:#E7EDFC; --wrong:#B3322B; --wrong-soft:#FCE9E7; --code-bg:#EEF2F7;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E1622; --surface:#162131; --ink:#E5ECF5; --muted:#9BABC1; --line:#2A394F;
+    --pass:#45C98D; --pass-soft:#14322A; --bug:#F2B744; --bug-bar:#F2B744; --bug-soft:#2C2414;
+    --accent:#86A6FF; --accent-soft:#1C2A4A; --wrong:#FF8A80; --wrong-soft:#3A1E1E; --code-bg:#101A28;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1622; --surface:#162131; --ink:#E5ECF5; --muted:#9BABC1; --line:#2A394F;
+  --pass:#45C98D; --pass-soft:#14322A; --bug:#F2B744; --bug-bar:#F2B744; --bug-soft:#2C2414;
+  --accent:#86A6FF; --accent-soft:#1C2A4A; --wrong:#FF8A80; --wrong-soft:#3A1E1E; --code-bg:#101A28;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:18px;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+code,pre{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.82em}
+code{background:var(--code-bg);padding:.1em .35em;border-radius:4px}
+pre{background:var(--code-bg);border:1px solid var(--line);padding:14px 16px;border-radius:8px;overflow-x:auto;line-height:1.5}
+pre code{background:none;padding:0;font-size:1em}
+
+/* header + run bar */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-inner{max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:1.05rem;text-decoration:none;color:var(--ink);white-space:nowrap}
+.run{flex:1;min-width:220px;display:flex;align-items:center;gap:12px}
+.ticks{flex:1;display:flex;gap:3px;height:14px}
+.tick{flex:1;border-radius:2px;background:var(--line);border:0;padding:0;cursor:pointer;min-width:4px}
+.tick.done{background:var(--pass)}
+.tick.here{outline:2px solid var(--ink);outline-offset:1px}
+.run-label{font-size:.85rem;color:var(--muted);white-space:nowrap}
+.menu-btn{display:none;font:inherit;font-size:.9rem;background:var(--accent-soft);color:var(--accent);border:0;border-radius:6px;padding:6px 12px;cursor:pointer}
+
+/* layout */
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:300px minmax(0,1fr);gap:40px;padding:28px 20px 80px}
+aside.suite{position:sticky;top:84px;align-self:start;max-height:calc(100vh - 110px);overflow:auto;padding-right:6px}
+.mod{margin-bottom:18px}
+.mod-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-weight:700;font-size:.95rem;margin:0 0 6px}
+.mod-count{font-weight:400;color:var(--muted);font-size:.8rem}
+.suite ol{list-style:none;margin:0;padding:0}
+.suite li a{display:flex;gap:10px;align-items:flex-start;text-decoration:none;color:var(--ink);font-size:.9rem;padding:5px 8px;border-radius:6px;line-height:1.35}
+.suite li a:hover{background:var(--accent-soft)}
+.suite li a[aria-current="page"]{background:var(--accent-soft);font-weight:700}
+.dot{flex:none;width:16px;height:16px;margin-top:2px;border-radius:50%;border:2px solid var(--muted);display:grid;place-items:center}
+.dot.done{background:var(--pass);border-color:var(--pass)}
+.dot.done::after{content:"";width:6px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
+
+main{min-width:0;max-width:740px}
+h1{font-size:2.1rem;line-height:1.2;margin:0 0 12px}
+h2{font-size:1.35rem;line-height:1.3;margin:36px 0 10px}
+h3{font-size:1.1rem;margin:26px 0 8px}
+p,li{max-width:68ch}
+.crumb{color:var(--muted);font-size:.9rem;margin-bottom:6px}
+.lead{font-size:1.1rem;color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+.tbl{overflow-x:auto;margin:12px 0}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--code-bg)}
+
+.box{border-radius:8px;padding:16px 18px;margin:28px 0}
+.practice{background:var(--bug-soft);border-left:5px solid var(--bug-bar)}
+.practice h3,.quiz h3,.ask h3{margin:0 0 6px;font-size:1rem}
+.practice h3{color:var(--bug)}
+.ask{background:var(--accent-soft)}
+.ask p{margin:4px 0}
+.quiz{background:var(--surface);border:1px solid var(--line)}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opt{font:inherit;font-size:.95rem;text-align:left;padding:10px 14px;border-radius:6px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.right{background:var(--pass-soft);border-color:var(--pass)}
+.opt.wrong{background:var(--wrong-soft);border-color:var(--wrong)}
+.why{margin-top:12px;font-size:.95rem}
+.why strong.r{color:var(--pass)} .why strong.w{color:var(--wrong)}
+
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:34px;padding-top:20px;border-top:1px solid var(--line)}
+.btn{font:inherit;font-size:.95rem;padding:10px 16px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-decoration:none;display:inline-block}
+.btn.primary{background:var(--pass);border-color:var(--pass);color:#fff}
+:root[data-theme="dark"] .btn.primary{color:#0E1622}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.primary{color:#0E1622}}
+.btn.passed{background:var(--pass-soft);border-color:var(--pass);color:var(--pass)}
+.spacer{flex:1}
+
+.overview{list-style:none;padding:0;margin:16px 0}
+.overview li{padding:14px 0;border-bottom:1px solid var(--line);max-width:none}
+.overview .t{font-weight:700}
+.overview .d{color:var(--muted);font-size:.95rem}
+.meter{height:6px;background:var(--line);border-radius:3px;margin-top:8px;overflow:hidden;max-width:320px}
+.meter span{display:block;height:100%;background:var(--pass)}
+.res li{margin:6px 0}
+.small{font-size:.85rem;color:var(--muted)}
+
+@media (max-width:900px){
+  .wrap{grid-template-columns:1fr;gap:0;padding-top:18px}
+  aside.suite{display:none;position:static;max-height:none;margin-bottom:24px;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+  aside.suite.open{display:block}
+  .menu-btn{display:inline-block}
+  h1{font-size:1.7rem}
+  body{font-size:17px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .tick{transition:background .25s}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <a class="brand" href="#start">QA Path</a>
+    <div class="run" aria-label="Your progress">
+      <div class="ticks" id="ticks"></div>
+      <span class="run-label" id="runLabel"></span>
+    </div>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="suite">Lessons</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="suite" id="suite" aria-label="All lessons"></aside>
+  <main id="main"></main>
+</div>
+
+<script>
+const MODULES = [
+{ id:"m1", title:"QA foundations", desc:"What testers do, where testing fits, and the main types of testing.", lessons:[
+{ id:"m1-1", title:"What a QA tester does",
+body:`<p>QA means <strong>quality assurance</strong>. A QA tester checks that software works the way it should, before real users see it.</p>
+<p>Your daily work as a junior tester usually looks like this:</p>
+<ul><li>Read what the feature should do (the requirements).</li><li>Write test cases: clear steps to check it.</li><li>Test the feature and compare what happens with what should happen.</li><li>Report bugs clearly so developers can fix them.</li><li>Retest the fix, and check that old features still work.</li></ul>
+<p><strong>Testing vs QA:</strong> testing is finding problems in the product. QA is bigger: improving the whole process so fewer bugs happen in the first place. In job ads, the two words are often used as the same thing.</p>
+<p>One key idea: testing can show that bugs exist, but it can never prove there are <em>no</em> bugs. Your job is to find the important ones early and give the team honest information about quality.</p>
+<p>Good news for you: QA rewards people who think like users, notice small details and communicate well. Your years with customers count here.</p>`,
+task:`Open a booking website you know well (a travel site is perfect). Write down 5 things you would check before letting customers use it. Example: “Can I book with a return date before the departure date?”`,
+ask:`“Give me 10 more things a tester would check on a flight booking page.”`,
+quiz:{q:"What is the main goal of testing?",o:["To prove the software has no bugs","To find problems early and give the team information about quality","To write the code faster","To design how the website looks"],a:1,why:"No amount of testing can prove software is bug-free. Testing finds problems early and shows the team how good the product really is."}},
+{ id:"m1-2", title:"Where testing fits in a project",
+body:`<p>Software is built in stages. This is called the <strong>SDLC</strong> (software development life cycle):</p>
+<p>Requirements → Design → Development → Testing → Release → Maintenance</p>
+<p>In old “waterfall” projects, testing came only at the end. Bugs found late are expensive to fix. Today most teams use <strong>Agile</strong>: they build in short cycles of 1–2 weeks, and testing happens in every cycle.</p>
+<p><strong>Shift left</strong> means starting testing earlier. A tester who reads the requirements and asks “What happens if the user has no internet?” can stop a bug before any code is written. That is the cheapest bug fix possible.</p>
+<p>Testing itself also has steps, called the <strong>STLC</strong> (software testing life cycle):</p>
+<ol><li>Understand the requirements</li><li>Plan the testing (what, how, who, when)</li><li>Design test cases</li><li>Prepare the test environment and data</li><li>Run the tests and report bugs</li><li>Close: summary report and lessons learned</li></ol>`,
+task:`Think about a website project you built. At which stage would a tester have helped you most? Write 2–3 sentences.`,
+ask:`“Explain Agile vs Waterfall with a restaurant example.”`,
+quiz:{q:"What does “shift left” mean?",o:["Moving the test team to another office","Testing earlier in the project","Testing only after release","Testing only the left side of the screen"],a:1,why:"On a timeline, the start of the project is on the left. Shift left means testers get involved earlier, when bugs are cheapest to fix."}},
+{ id:"m1-3", title:"Types of testing",
+body:`<p><strong>Functional testing</strong> checks <em>what</em> the system does. Can I log in? Does the cart total add up?</p>
+<p><strong>Non-functional testing</strong> checks <em>how well</em> it does it:</p>
+<ul><li>Performance: is it fast with 1,000 users?</li><li>Security: can someone see another user’s data?</li><li>Usability: is it easy to use?</li><li>Accessibility: can people with disabilities use it?</li></ul>
+<p>Words you will hear every week:</p>
+<div class="tbl"><table><tr><th>Name</th><th>What it means</th></tr>
+<tr><td>Smoke testing</td><td>A quick check that the main functions work after a new build. If smoke fails, deeper testing stops.</td></tr>
+<tr><td>Sanity testing</td><td>A short, focused check of one area after a small change or fix.</td></tr>
+<tr><td>Retesting</td><td>Checking that a specific bug is really fixed.</td></tr>
+<tr><td>Regression testing</td><td>Checking that old features still work after new changes. This is the #1 thing teams automate.</td></tr>
+<tr><td>Black box</td><td>Testing without looking at the code, like a user. Most manual QA work.</td></tr>
+<tr><td>White box</td><td>Testing with knowledge of the code. Mostly developers.</td></tr></table></div>`,
+task:`For a food-ordering app, write one example each of: a smoke test, a regression test, and a performance test.`,
+ask:`“Quiz me on smoke, sanity, retesting and regression with 5 real-life examples.”`,
+quiz:{q:"A developer added a new payment method. You check that login, search and the old payment methods still work. What is this?",o:["Smoke testing","Retesting","Regression testing","Security testing"],a:2,why:"Checking that existing features did not break after a change is regression testing."}},
+{ id:"m1-4", title:"Test levels and the test pyramid",
+body:`<p>Software is tested at different levels, from small pieces to the whole product:</p>
+<ol><li><strong>Unit testing:</strong> one small piece of code, like one function. Written by developers.</li><li><strong>Integration testing:</strong> checks that parts work together, like the website and the payment service.</li><li><strong>System testing:</strong> the whole product, end to end. This is where QA spends most time.</li><li><strong>Acceptance testing (UAT):</strong> the client or business checks that it does what they need.</li></ol>
+<p>The <strong>test pyramid</strong> says: have many fast unit tests at the bottom, fewer integration tests in the middle, and a small number of slow end-to-end (E2E) UI tests at the top. Playwright, which you will learn later, is mostly used for those E2E tests at the top.</p>`,
+task:`Draw the test pyramid on paper and write one example test for each level, using an online shop.`,
+ask:`“Why is it bad to have only UI tests and no unit tests?”`,
+quiz:{q:"Who usually writes unit tests?",o:["Developers","Clients","Project managers","Customer support"],a:0,why:"Unit tests check small pieces of code, so the developers who write that code usually write them."}}
+]},
+{ id:"m2", title:"Manual testing skills", desc:"Test cases, smart test design, bug reports and exploratory testing.", lessons:[
+{ id:"m2-1", title:"Writing test cases",
+body:`<p>A <strong>test case</strong> is a set of steps that checks one thing. Anyone on the team should be able to follow it and get the same result.</p>
+<p>Common fields:</p>
+<div class="tbl"><table><tr><th>Field</th><th>Example</th></tr>
+<tr><td>ID</td><td>TC-LOGIN-01</td></tr>
+<tr><td>Title</td><td>User can log in with valid email and password</td></tr>
+<tr><td>Preconditions</td><td>User account exists; user is logged out</td></tr>
+<tr><td>Steps</td><td>1. Open login page 2. Enter email 3. Enter password 4. Click “Log in”</td></tr>
+<tr><td>Test data</td><td>test@mail.com / Pass123!</td></tr>
+<tr><td>Expected result</td><td>User sees the dashboard with their name</td></tr>
+<tr><td>Actual result</td><td>Filled in when you run the test</td></tr>
+<tr><td>Status</td><td>Pass / Fail / Blocked</td></tr></table></div>
+<p>Tips:</p>
+<ul><li>One test case, one goal.</li><li>Write <strong>positive</strong> tests (correct use) and <strong>negative</strong> tests (wrong password, empty fields).</li><li>The expected result must be specific. “It works” is not an expected result.</li></ul>`,
+task:`Write 5 test cases for a login page in a Google Sheet: 2 positive and 3 negative. Keep this sheet; it becomes part of your portfolio.`,
+ask:`“Here are my 5 login test cases: [paste]. What did I miss?”`,
+quiz:{q:"What is the “expected result” in a test case?",o:["What actually happened when you tested","What should happen, based on the requirements","The tester’s opinion of the design","The bug ID"],a:1,why:"The expected result comes from the requirements. You compare it with the actual result to decide pass or fail."}},
+{ id:"m2-2", title:"Smart test design: partitions and boundaries",
+body:`<p>You cannot test every possible value. Test design techniques help you choose the few values that find the most bugs.</p>
+<h3>Equivalence partitioning</h3>
+<p>Split inputs into groups that should behave the same, then test one value from each group. If an age field accepts 18 to 60:</p>
+<ul><li>Invalid: below 18 (test 10)</li><li>Valid: 18 to 60 (test 35)</li><li>Invalid: above 60 (test 70)</li></ul>
+<h3>Boundary value analysis</h3>
+<p>Bugs love edges. Developers often write <code>&lt;</code> when they meant <code>&lt;=</code>. So test right at and just outside each edge: <strong>17, 18, 60, 61</strong>.</p>
+<h3>Decision tables</h3>
+<p>When rules combine (“member AND order over 100 zł gets free delivery”), list every combination in a table so you don’t skip one.</p>`,
+task:`A discount code field accepts codes 6 to 10 characters long. List the partitions and the boundary values you would test.`,
+ask:`“Give me 3 practice exercises on boundary value analysis, then check my answers.”`,
+quiz:{q:"A field accepts numbers from 1 to 100. Which values does boundary value analysis focus on?",o:["50 only","1 and 100 only","0, 1, 100, 101","Any random numbers"],a:2,why:"Test at each edge and just outside it: 0 and 1 for the lower edge, 100 and 101 for the upper edge."}},
+{ id:"m2-3", title:"Writing a great bug report",
+body:`<p>A bug report is your main product as a tester. A good one gets fixed fast. A bad one gets ignored or sent back.</p>
+<p>Include:</p>
+<ul><li><strong>Title:</strong> what is wrong, where, and when</li><li><strong>Environment:</strong> browser and version, device, test or live site</li><li><strong>Steps to reproduce:</strong> numbered and exact</li><li><strong>Expected result</strong> and <strong>actual result</strong></li><li><strong>Severity and priority</strong> (next lesson)</li><li><strong>Attachments:</strong> screenshot, short screen recording, console errors</li></ul>
+<div class="tbl"><table><tr><th>Bad title</th><th>Good title</th></tr>
+<tr><td>Login broken!!!</td><td>Login fails with “500 error” when email contains a plus sign (+)</td></tr>
+<tr><td>Cart problem</td><td>Cart total doesn’t update after removing an item on mobile Safari</td></tr></table></div>
+<p>Before reporting, try to reproduce the bug twice. Stay neutral: describe the problem, never blame a person.</p>`,
+task:`Find a real small bug or annoyance on any website (even a typo). Write a full bug report for it using the fields above.`,
+ask:`“Review my bug report and tell me how a developer would see it: [paste].”`,
+quiz:{q:"Which bug title is best?",o:["Search doesn’t work","URGENT fix search now","Search returns no results when query has Polish letters (ą, ę, ł)","Bug in website"],a:2,why:"A good title says what is wrong and under which condition, so the developer understands it before even opening the report."}},
+{ id:"m2-4", title:"Bug life cycle, severity and priority",
+body:`<p>Every bug moves through statuses. A common flow:</p>
+<p><strong>New → Assigned → In progress → Fixed → Ready for retest → Closed</strong></p>
+<p>If your retest fails, it goes to <strong>Reopened</strong>. A bug can also be marked <em>Rejected</em> (not a bug), <em>Duplicate</em>, or <em>Deferred</em> (fix later).</p>
+<h3>Severity vs priority</h3>
+<p><strong>Severity</strong> = how much damage the bug does to the system. <strong>Priority</strong> = how urgently it must be fixed. They are not always the same:</p>
+<div class="tbl"><table><tr><th>Bug</th><th>Severity</th><th>Priority</th></tr>
+<tr><td>Company name misspelled on the homepage</td><td>Low</td><td>High</td></tr>
+<tr><td>Crash in an old admin report used once a year</td><td>High</td><td>Low</td></tr>
+<tr><td>Nobody can pay at checkout</td><td>High</td><td>High</td></tr></table></div>
+<p>Testers usually set severity. The product owner usually decides priority.</p>`,
+task:`Write 4 bug examples from a travel booking site, one for each combination: high/high, high/low, low/high, low/low.`,
+ask:`“A developer says my bug is ‘not a bug’. How should I respond?”`,
+quiz:{q:"The company logo is broken on the homepage, but every function works. What fits best?",o:["High severity, low priority","Low severity, high priority","High severity, high priority","Low severity, low priority"],a:1,why:"Nothing is technically broken (low severity), but every customer sees it and it hurts the brand (high priority)."}},
+{ id:"m2-5", title:"Exploratory testing",
+body:`<p><strong>Exploratory testing</strong> means learning the product and testing it at the same time, without a fixed script. It finds bugs that written test cases miss.</p>
+<p>To keep it focused, use a <strong>charter</strong> and a time limit: “Explore the checkout with different payment methods for 45 minutes, to find problems with totals.” Take notes as you go.</p>
+<p>Tricks testers use:</p>
+<ul><li>Leave fields empty, or type very long text</li><li>Use special characters, emojis and Polish letters</li><li>Double-click buttons; click “Pay” twice</li><li>Use the browser back button in the middle of a process</li><li>Refresh the page during loading</li><li>Try a small phone screen and slow internet (DevTools can simulate both)</li><li>Open the same account in two tabs</li></ul>`,
+task:`Do a 30-minute exploratory session on www.saucedemo.com (user: standard_user, password: secret_sauce). Write down every strange thing you notice. Then log in as problem_user and compare.`,
+ask:`“Here are my exploratory notes from saucedemo: [paste]. Which ones are real bugs?”`,
+quiz:{q:"What best describes exploratory testing?",o:["Running old test cases again","Learning and testing at the same time, guided by a goal","Testing only with automation","Random clicking with no notes"],a:1,why:"Exploratory testing is unscripted but not random: you work toward a goal (charter), in a time limit, and take notes."}}
+]},
+{ id:"m3", title:"How the web works and your tools", desc:"HTTP, DevTools, API testing with Postman, and Agile teamwork in Jira.", lessons:[
+{ id:"m3-1", title:"Browsers, servers and HTTP",
+body:`<p>When you open a website, your browser sends a <strong>request</strong> to a server, and the server sends back a <strong>response</strong>. This conversation uses <strong>HTTP</strong>.</p>
+<p>Request <strong>methods</strong> say what you want to do:</p>
+<ul><li><code>GET</code> read data (open a page, load bookings)</li><li><code>POST</code> create something (new booking)</li><li><code>PUT</code> or <code>PATCH</code> update something</li><li><code>DELETE</code> remove something</li></ul>
+<p>Every response has a <strong>status code</strong>. Learn these by heart:</p>
+<div class="tbl"><table><tr><th>Code</th><th>Meaning</th></tr>
+<tr><td>200</td><td>OK, success</td></tr><tr><td>201</td><td>Created</td></tr><tr><td>301 / 302</td><td>Redirect</td></tr>
+<tr><td>400</td><td>Bad request (wrong data sent)</td></tr><tr><td>401</td><td>Not logged in</td></tr><tr><td>403</td><td>Logged in, but not allowed</td></tr>
+<tr><td>404</td><td>Not found</td></tr><tr><td>500</td><td>Server error (often a real bug)</td></tr></table></div>
+<p>Rule of thumb: <strong>4xx</strong> = problem with the request, <strong>5xx</strong> = problem on the server.</p>`,
+task:`Write down the status code you would expect in each case: opening a page that doesn’t exist, creating a new user, and a server crash.`,
+ask:`“Explain the difference between 401 and 403 with a hotel example.”`,
+quiz:{q:"What does status code 404 mean?",o:["Server error","Not found","Success","Not logged in"],a:1,why:"404 means the requested page or resource does not exist."}},
+{ id:"m3-2", title:"Browser DevTools for testers",
+body:`<p>Every browser has built-in <strong>DevTools</strong>. Press <code>F12</code> (or right-click → Inspect). Testers use them every day:</p>
+<ul><li><strong>Elements:</strong> see the page’s HTML. Useful later for automation.</li><li><strong>Console:</strong> JavaScript errors appear in red. Always check it when something looks wrong.</li><li><strong>Network:</strong> every request the page makes, with status codes and timing. Failed calls show in red.</li><li><strong>Device toolbar</strong> (phone icon): test how the site looks on phones.</li><li><strong>Application:</strong> cookies and stored data.</li></ul>
+<p>Pro habit: when you report a bug, add a screenshot of the console error or the failed network request. Developers love this.</p>`,
+task:`Open DevTools on any website. In Network, reload the page and find one request with status 200. Then switch on the device toolbar and view the site as an iPhone.`,
+ask:`“I see this error in the console: [paste]. What does it mean?”`,
+quiz:{q:"Where in DevTools do you see failed API calls and their status codes?",o:["Elements","Network","Device toolbar","Fonts"],a:1,why:"The Network tab lists every request with its status code, size and time."}},
+{ id:"m3-3", title:"API testing with Postman",
+body:`<p>An <strong>API</strong> is how two programs talk to each other. When you click “Search flights”, the website calls an API, and the API returns data, usually in <strong>JSON</strong>:</p>
+<pre><code>{
+  "id": 1,
+  "name": "Avinash",
+  "city": "Warsaw"
+}</code></pre>
+<p>Testing the API directly is faster than clicking through the website, and many QA jobs ask for it. <strong>Postman</strong> is the most common free tool.</p>
+<p>In Postman:</p>
+<ol><li>Choose the method (GET, POST…)</li><li>Paste the URL</li><li>For POST, add a JSON body</li><li>Click Send</li><li>Check the status code, the response body, and the response time</li></ol>
+<p>Free practice API: <a href="https://jsonplaceholder.typicode.com" target="_blank" rel="noopener">jsonplaceholder.typicode.com</a>. Try <code>GET https://jsonplaceholder.typicode.com/users/1</code>.</p>`,
+task:`Install Postman. Send a GET to /users/1 and a POST to /posts with a small JSON body. Write down the status code of each (you should see 200 and 201).`,
+ask:`“How do I write a test in Postman that checks the status code is 200?”`,
+quiz:{q:"Which HTTP method is usually used to create new data?",o:["GET","POST","DELETE","HEAD"],a:1,why:"POST sends data to the server to create something new, and a success usually returns 201 Created."}},
+{ id:"m3-4", title:"Agile, Scrum and Jira",
+body:`<p>Most IT companies in Poland work in <strong>Scrum</strong>, a type of Agile:</p>
+<ul><li><strong>Sprint:</strong> 1–2 weeks of work with a clear goal</li><li><strong>Daily stand-up:</strong> 15 minutes. What I did, what I’ll do, what blocks me</li><li><strong>Sprint review:</strong> show the finished work</li><li><strong>Retrospective:</strong> what to improve next time</li></ul>
+<p>Work is written as <strong>user stories</strong>: “As a customer, I want to cancel my booking, so I can get a refund.” Each story has <strong>acceptance criteria</strong>, the exact conditions that make it “done”. These are gold for testers: each one becomes at least one test case.</p>
+<p><strong>Jira</strong> is the tool where teams track stories, tasks and bugs. You can create a free Jira account to practise.</p>`,
+task:`Write one user story with 3 acceptance criteria for “cancel a booking”. Then write one test case for each criterion.`,
+ask:`“Play a Scrum stand-up with me where I am the QA.”`,
+quiz:{q:"What are acceptance criteria?",o:["The list of developers on the team","Conditions a story must meet to be considered done","The bug priority","The release date"],a:1,why:"Acceptance criteria define “done” for a story, so testers turn them into test cases."}}
+]},
+{ id:"m4", title:"Coding basics for automation", desc:"Your setup, just enough JavaScript and TypeScript, and Git.", lessons:[
+{ id:"m4-1", title:"Set up your computer",
+body:`<p>Install these free tools:</p>
+<ol><li><strong>VS Code</strong>: the code editor (code.visualstudio.com)</li><li><strong>Node.js</strong>: runs JavaScript on your computer. Choose the LTS version (nodejs.org)</li><li><strong>Git</strong>: saves versions of your code (git-scm.com)</li></ol>
+<p>Then open a terminal (in VS Code: Terminal → New Terminal) and check that everything works:</p>
+<pre><code>node -v
+npm -v
+git --version</code></pre>
+<p>Each command should print a version number. <code>npm</code> comes with Node. It installs packages like Playwright.</p>`,
+task:`Install all three and run the three commands. Take a screenshot of the version numbers.`,
+ask:`“I got this error when I ran node -v: [paste]. How do I fix it?”`,
+quiz:{q:"What is npm?",o:["A web browser","A package manager that installs tools like Playwright","A testing type","A bug status"],a:1,why:"npm installs JavaScript packages. You will use it to install Playwright."}},
+{ id:"m4-2", title:"JavaScript and TypeScript, just enough",
+body:`<p>You don’t need to be a developer. You need these basics:</p>
+<pre><code>// variables
+const city = 'Warsaw';     // cannot change
+let price = 100;           // can change
+price = price + 20;
+
+// array (list) and object
+const cities = ['Warsaw', 'Kraków', 'Gdańsk'];
+const user = { name: 'Avinash', age: 32 };
+
+// function
+function addTax(amount) {
+  return amount * 1.23;
+}
+
+// if / else
+if (price &gt; 100) {
+  console.log('Expensive');
+} else {
+  console.log('OK');
+}
+
+// loop
+for (const c of cities) {
+  console.log(c);
+}</code></pre>
+<p><strong>async / await:</strong> browser actions take time. In Playwright you write <code>await</code> before each action so the code waits for it to finish before going on.</p>
+<p><strong>TypeScript</strong> is JavaScript with types, like <code>let price: number = 100</code>. Playwright works with both. Most test code looks almost the same, so don’t be afraid of it.</p>
+<p>Best free resource: <a href="https://javascript.info" target="_blank" rel="noopener">javascript.info</a>, chapters 1–2 are enough to start.</p>`,
+task:`Create a file practice.js in VS Code. Write a function that takes a ticket price and returns the price with 23% VAT. Run it with: node practice.js`,
+ask:`“Give me 5 small JavaScript exercises for testers and check my answers.”`,
+quiz:{q:"Why do Playwright tests use “await”?",o:["To make the test slower on purpose","To wait for each browser action to finish before the next step","To skip a step","To hide errors"],a:1,why:"Browser actions are asynchronous. await makes the test wait for each action to complete."}},
+{ id:"m4-3", title:"Git and GitHub",
+body:`<p>Git saves snapshots of your code. GitHub stores them online, and recruiters look at your GitHub to see your work.</p>
+<p>The everyday commands:</p>
+<pre><code>git init                       # start tracking a folder
+git add .                      # choose all changed files
+git commit -m "Add login tests"   # save a snapshot
+git push                       # upload to GitHub</code></pre>
+<ul><li><strong>Repository (repo):</strong> a project folder tracked by Git</li><li><strong>Commit:</strong> a saved snapshot with a message</li><li><strong>Branch:</strong> a separate line of work, so you don’t break the main code</li><li><strong>Pull request:</strong> asking to merge your branch into main. Teams review it first</li></ul>
+<p>Practise visually at <a href="https://learngitbranching.js.org" target="_blank" rel="noopener">learngitbranching.js.org</a>.</p>`,
+task:`Create a new GitHub repo called qa-practice. Push your practice.js file to it with a clear commit message.`,
+ask:`“Explain git merge vs git rebase in simple words.”`,
+quiz:{q:"What is a commit?",o:["A saved snapshot of your code with a message","A type of bug","A testing tool","A server error"],a:0,why:"A commit records the state of your files at one moment, with a message explaining the change."}}
+]},
+{ id:"m5", title:"Automation with Playwright", desc:"Write, run and organise real browser tests.", lessons:[
+{ id:"m5-1", title:"Install Playwright and run your first test",
+body:`<p>Make an empty folder, open it in VS Code, and run:</p>
+<pre><code>npm init playwright@latest</code></pre>
+<p>Choose <strong>TypeScript</strong>, keep the <code>tests</code> folder, and say yes to installing browsers. Playwright creates an example test. Your first own test looks like this:</p>
+<pre><code>import { test, expect } from '@playwright/test';
+
+test('home page has the right title', async ({ page }) =&gt; {
+  await page.goto('https://playwright.dev/');
+  await expect(page).toHaveTitle(/Playwright/);
+});</code></pre>
+<p>Useful commands:</p>
+<pre><code>npx playwright test            # run all tests
+npx playwright test --ui       # visual mode, great for learning
+npx playwright test --headed   # watch the browser
+npx playwright show-report      # open the HTML report</code></pre>
+<p>Also install the <strong>Playwright Test for VS Code</strong> extension. It lets you run tests with one click.</p>`,
+task:`Install Playwright, run the example tests, then open the report. Try --ui mode and watch each step.`,
+ask:`“My first Playwright test failed with this message: [paste]. What’s wrong?”`,
+quiz:{q:"Which command opens Playwright’s visual test mode?",o:["npx playwright test --ui","npm start","git push","node -v"],a:0,why:"--ui opens UI mode, where you can run tests step by step and see each action."}},
+{ id:"m5-2", title:"Locators and actions",
+body:`<p>A <strong>locator</strong> tells Playwright which element to use. Prefer locators based on what the user sees:</p>
+<pre><code>page.getByRole('button', { name: 'Log in' })
+page.getByLabel('Email')
+page.getByPlaceholder('Search flights')
+page.getByText('Booking confirmed')
+page.getByTestId('cart-total')</code></pre>
+<p>Avoid long CSS or XPath like <code>div &gt; div:nth-child(3) &gt; span</code>. They break as soon as the design changes.</p>
+<p>Common <strong>actions</strong>:</p>
+<pre><code>await page.getByLabel('Email').fill('test@mail.com');
+await page.getByRole('button', { name: 'Log in' }).click();
+await page.getByLabel('Accept terms').check();
+await page.getByLabel('Country').selectOption('Poland');
+await page.keyboard.press('Enter');</code></pre>
+<p>Shortcut: <strong>codegen</strong> records your clicks and writes the code for you.</p>
+<pre><code>npx playwright codegen https://demo.playwright.dev/todomvc</code></pre>`,
+task:`Run codegen on the todo demo. Add 3 todos, tick one as done, and look at the code it generated. Copy it into a new test file and run it.`,
+ask:`“Which locator should I use for this element? [paste the HTML]”`,
+quiz:{q:"Which locator is the most stable?",o:["div > div:nth-child(3) > button","page.getByRole('button', { name: 'Pay now' })","//html/body/div[2]/div/button[1]","The 5th button on the page"],a:1,why:"Role and name are what the user sees, so they rarely change when developers rework the page layout."}},
+{ id:"m5-3", title:"Assertions and auto-waiting",
+body:`<p>An <strong>assertion</strong> checks the result. Without assertions, a test only clicks around and proves nothing.</p>
+<pre><code>await expect(page).toHaveURL(/inventory/);
+await expect(page.getByText('Products')).toBeVisible();
+await expect(page.getByTestId('cart-total')).toHaveText('120 zł');
+await expect(page.getByRole('listitem')).toHaveCount(3);</code></pre>
+<p>A full test on the practice shop:</p>
+<pre><code>import { test, expect } from '@playwright/test';
+
+test('user can log in', async ({ page }) =&gt; {
+  await page.goto('https://www.saucedemo.com/');
+  await page.getByPlaceholder('Username').fill('standard_user');
+  await page.getByPlaceholder('Password').fill('secret_sauce');
+  await page.getByRole('button', { name: 'Login' }).click();
+  await expect(page).toHaveURL(/inventory/);
+  await expect(page.getByText('Products')).toBeVisible();
+});</code></pre>
+<p><strong>Auto-waiting:</strong> Playwright automatically waits for elements to appear and be ready. Never add fixed pauses like <code>waitForTimeout(5000)</code>. They make tests slow and still flaky.</p>`,
+task:`Write 3 tests for saucedemo: successful login, login with a wrong password (check the error message), and adding one item to the cart (check the cart badge shows 1).`,
+ask:`“Review my 3 saucedemo tests: [paste].”`,
+quiz:{q:"Why should you avoid waitForTimeout(5000) in tests?",o:["It is not allowed in TypeScript","It makes tests slow and still unreliable; Playwright already waits automatically","It deletes your test data","It only works in Firefox"],a:1,why:"Fixed waits are either too long (slow) or too short (flaky). Playwright’s auto-waiting and expect assertions handle timing for you."}},
+{ id:"m5-4", title:"Page Object Model",
+body:`<p>When you have many tests, the same locators repeat everywhere. If the login button changes, you must fix 30 files. The <strong>Page Object Model (POM)</strong> solves this: each page gets one class that holds its locators and actions.</p>
+<pre><code>// pages/LoginPage.ts
+import { Page } from '@playwright/test';
+
+export class LoginPage {
+  constructor(private page: Page) {}
+
+  async open() {
+    await this.page.goto('https://www.saucedemo.com/');
+  }
+
+  async login(user: string, pass: string) {
+    await this.page.getByPlaceholder('Username').fill(user);
+    await this.page.getByPlaceholder('Password').fill(pass);
+    await this.page.getByRole('button', { name: 'Login' }).click();
+  }
+}</code></pre>
+<pre><code>// tests/login.spec.ts
+import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
+
+test('user can log in', async ({ page }) =&gt; {
+  const login = new LoginPage(page);
+  await login.open();
+  await login.login('standard_user', 'secret_sauce');
+  await expect(page).toHaveURL(/inventory/);
+});</code></pre>
+<p>Now the test reads like plain English, and locators live in one place. Interviewers ask about POM very often.</p>`,
+task:`Move your 3 saucedemo tests to POM: create LoginPage and InventoryPage classes. All tests should still pass.`,
+ask:`“Is my Page Object written well? [paste]”`,
+quiz:{q:"What is the main benefit of the Page Object Model?",o:["Tests run without a browser","Locators and page actions live in one place, so tests are easier to read and maintain","It writes test cases automatically","It removes the need for assertions"],a:1,why:"POM keeps each page’s locators and actions in one class, so one change fixes every test that uses it."}},
+{ id:"m5-5", title:"Debugging and running tests in CI",
+body:`<p>When a test fails, use the <strong>trace viewer</strong>. It records every step with screenshots, network calls and console logs:</p>
+<pre><code>npx playwright test --trace on
+npx playwright show-report</code></pre>
+<p>Open the failed test in the report and click the trace. You can step back in time and see exactly what the page looked like.</p>
+<p><strong>CI</strong> (continuous integration) runs your tests automatically every time code is pushed. When you set up Playwright, it can create a GitHub Actions file for you (<code>.github/workflows/playwright.yml</code>). Push your project to GitHub and open the <strong>Actions</strong> tab to see your tests run in the cloud.</p>
+<p>A green CI badge on your GitHub project tells recruiters you know how real teams work.</p>`,
+task:`Push your saucedemo project to GitHub with the Playwright workflow file. Check that the tests pass in the Actions tab.`,
+ask:`“My tests pass on my computer but fail in GitHub Actions. Here is the log: [paste].”`,
+quiz:{q:"What does CI do?",o:["Designs the user interface","Runs tests automatically whenever code changes are pushed","Writes bug reports","Replaces manual testers"],a:1,why:"Continuous integration runs the test suite on every push, so problems are caught quickly."}}
+]},
+{ id:"m6", title:"AI skills for QA", desc:"Use AI to work faster, while staying the expert who checks the work.", lessons:[
+{ id:"m6-1", title:"Use AI to design test cases",
+body:`<p>AI is very good at giving you a first draft of test cases. You are still responsible for checking them.</p>
+<p>A good prompt gives context, the requirement, and the format you want:</p>
+<pre><code>You are a senior QA engineer.
+Feature: users can cancel a hotel booking up to 24 hours
+before check-in and get a full refund. After that, no refund.
+Write test cases as a table: ID, title, steps, test data,
+expected result. Include positive, negative and boundary
+cases (for example exactly 24 hours before check-in).</code></pre>
+<p>Then improve the result:</p>
+<ul><li>Ask: “What edge cases are missing?”</li><li>Delete tests that don’t match the real requirement.</li><li>Check that every expected result is specific.</li></ul>`,
+task:`Use the prompt above (or change the feature). Review the output and mark which test cases are wrong or missing something.`,
+ask:`“Here’s what AI gave me for the cancel feature: [paste]. What would a senior tester change?”`,
+quiz:{q:"What is the most important rule when using AI for test cases?",o:["Copy everything AI gives you without reading","Review and correct the output; you are responsible for it","Never give AI any context","Only use AI for design"],a:1,why:"AI can miss rules or invent wrong ones. A tester checks every case against the real requirement."}},
+{ id:"m6-2", title:"AI for test data and bug reports",
+body:`<p>Two daily uses that save hours:</p>
+<h3>Test data</h3>
+<p>Ask AI for realistic data: names with Polish letters (Łukasz Wójcik), very long names, invalid emails, Polish postcodes, dates around leap years. Example: “Give me 15 invalid email addresses and say why each is invalid.”</p>
+<h3>Clear bug reports</h3>
+<p>Write your rough notes, then ask: “Turn these notes into a clear bug report with title, steps, expected and actual result.” This is great when English isn’t your first language and you want clean, professional text.</p>
+<h3>Safety rule</h3>
+<p>Never paste company passwords, customer personal data or secret code into public AI tools. Use only what your company allows.</p>`,
+task:`Ask AI for 10 test data rows for a Polish address form (good and bad examples). Then rewrite one of your earlier bug reports with AI and compare.`,
+ask:`“Make my bug report clearer and more professional: [paste].”`,
+quiz:{q:"Which should you never paste into a public AI tool?",o:["A made-up example email","Real customer personal data from your company","A question about boundary values","Your own practice code"],a:1,why:"Customer data is private and protected by law (GDPR in Poland). Use fake or anonymised data instead."}},
+{ id:"m6-3", title:"AI with Playwright",
+body:`<p>Ways AI speeds up automation:</p>
+<ul><li><strong>Explain errors:</strong> paste the failing test and error message and ask what went wrong.</li><li><strong>Refactor:</strong> record a test with codegen, then ask AI to turn it into Page Object Model with clear names.</li><li><strong>Write new tests</strong> from your test cases, then run them and fix them yourself.</li><li><strong>Review:</strong> ask “What could make this test flaky?”</li></ul>
+<p>Newer Playwright versions also include AI “agents” that can plan, write and repair tests. They are useful, but only if you understand the basics well enough to judge what the AI writes. That’s why you learned locators, assertions and POM first.</p>
+<p>In interviews, say it like this: “I use AI to speed up test design and coding, and I always review and run the result myself.”</p>`,
+task:`Record a test with codegen on saucedemo (add 2 items, go to cart). Ask AI to convert it to POM. Run it and fix anything that fails.`,
+ask:`“Convert this codegen test into Page Object Model: [paste].”`,
+quiz:{q:"Why learn Playwright basics before using AI agents?",o:["Because agents are illegal","So you can judge and fix what the AI writes","Because AI can’t write code","It isn’t needed at all"],a:1,why:"If you understand locators, assertions and structure, you can spot weak or wrong AI-generated tests and fix them."}}
+]},
+{ id:"m7", title:"Getting the job", desc:"Certificate, portfolio, CV and interview practice for the Polish market.", lessons:[
+{ id:"m7-1", title:"ISTQB Foundation certificate",
+body:`<p>The <strong>ISTQB Certified Tester Foundation Level (CTFL)</strong> is the best-known testing certificate. Many junior job ads in Poland mention it.</p>
+<ul><li>About 40 multiple-choice questions, 60 minutes (non-native speakers usually get extra time)</li><li>Pass mark is around 65%</li><li>The exam is available in English</li><li>In Poland it is run by SJSI and partner exam providers</li></ul>
+<p>Most of the theory is in Modules 1 and 2 of this course. Download the free official syllabus and sample exams from <a href="https://www.istqb.org" target="_blank" rel="noopener">istqb.org</a>, and check current prices and dates with the exam provider before you book.</p>
+<p>Plan: study the syllabus 1 hour a day for about 4–6 weeks, then do the sample exams until you score over 80%.</p>`,
+task:`Download the CTFL syllabus and one sample exam. Do the sample exam now, before studying, to see your starting score.`,
+ask:`“Quiz me with 10 ISTQB Foundation-style questions on chapter 1.”`,
+quiz:{q:"What level of ISTQB certificate should a beginner take first?",o:["Expert Level","Advanced Test Manager","Foundation Level (CTFL)","No certificate exists for testing"],a:2,why:"Foundation Level is the entry certificate and the one junior job ads usually mention."}},
+{ id:"m7-2", title:"Build a portfolio that gets interviews",
+body:`<p>Without job experience, your portfolio is your proof. Build three projects on GitHub:</p>
+<ol><li><strong>Manual testing pack</strong> for a real public website: a short test plan, 20+ test cases, 5 bug reports with screenshots.</li><li><strong>Playwright project</strong> for saucedemo: 10+ tests, Page Object Model, running in GitHub Actions, with a clear README.</li><li><strong>API tests</strong>: a Postman collection for jsonplaceholder, or API tests written in Playwright.</li></ol>
+<p>Each README should say: what you tested, which tools, how to run it, and what you found. Add screenshots of the report. Then link all three on your portfolio website.</p>
+<p>Testing a website you built yourself is a strong story in interviews: you can talk about bugs you found in real work.</p>`,
+task:`Create the three repos (even empty at first) and write a README plan for each one.`,
+ask:`“Review my README for my Playwright project: [paste].”`,
+quiz:{q:"What makes a QA portfolio project convincing?",o:["Only a certificate image","Real test cases, bug reports or tests with a clear README showing how to run them","A long list of skills with no examples","A copied project from someone else"],a:1,why:"Recruiters want to see real work they can open and understand quickly."}},
+{ id:"m7-3", title:"CV, LinkedIn and where to apply",
+body:`<p><strong>Job titles to search:</strong> Junior QA Engineer, QA Tester, Manual Tester, Junior Test Automation Engineer, QA Intern.</p>
+<p><strong>Where to look in Poland:</strong> <a href="https://justjoin.it" target="_blank" rel="noopener">justjoin.it</a>, <a href="https://nofluffjobs.com" target="_blank" rel="noopener">nofluffjobs.com</a>, <a href="https://www.pracuj.pl" target="_blank" rel="noopener">pracuj.pl</a>, theprotocol.it and LinkedIn. Filter for English-language roles. Warsaw has many international companies that work in English.</p>
+<p><strong>CV tips:</strong></p>
+<ul><li>One page. Put skills and projects above old jobs.</li><li>Skills: manual testing, test cases, bug reporting, Jira, Postman, Playwright, TypeScript, Git, ISTQB.</li><li>Link your GitHub and portfolio at the top.</li><li>Turn past jobs into QA strengths: as a travel agent you used booking systems daily, found their problems, and understand what customers need.</li></ul>
+<p><strong>LinkedIn:</strong> headline like “Junior QA Engineer | Manual &amp; Playwright Automation | ISTQB”. Turn on “Open to work” and post about your projects.</p>
+<p>Apply to 5–10 jobs every week. Track them in a simple sheet.</p>`,
+task:`Write your new CV headline and 3 bullet points that turn your travel agent work into QA strengths.`,
+ask:`“Turn my experience into a junior QA CV: [paste your current CV].”`,
+quiz:{q:"How should you show your old non-IT job on a QA CV?",o:["Hide it completely","Highlight skills that transfer, like working with booking systems and understanding users","Write only the company name","Say you were a developer"],a:1,why:"Transferable skills show you already think like a tester. Never invent experience."}},
+{ id:"m7-4", title:"Interview practice",
+body:`<p>Questions you will almost certainly hear, with the core of a good answer:</p>
+<div class="tbl"><table><tr><th>Question</th><th>Key points</th></tr>
+<tr><td>Severity vs priority?</td><td>Impact vs urgency, plus one example of each mix.</td></tr>
+<tr><td>Smoke vs regression?</td><td>Quick check of main functions vs full check that old features still work.</td></tr>
+<tr><td>How would you test a login page?</td><td>Positive, negative, boundaries, security (password hidden, lockout), usability, mobile, API.</td></tr>
+<tr><td>What’s in a good bug report?</td><td>Title, environment, steps, expected, actual, severity, attachments.</td></tr>
+<tr><td>A developer says it’s not a bug. What do you do?</td><td>Check the requirement, show evidence, stay calm, ask the product owner if unclear.</td></tr>
+<tr><td>Why Playwright?</td><td>Auto-waiting, all major browsers, fast, trace viewer, good TypeScript support.</td></tr>
+<tr><td>What is POM?</td><td>One class per page holding locators and actions; easier maintenance.</td></tr>
+<tr><td>Tell me about a bug you found.</td><td>Use a real one from your portfolio: what, how you found it, impact.</td></tr></table></div>
+<p>Also expect a live task: “Test this pen” or “test this form” in 10 minutes. Think out loud and organise your ideas into functional, negative, usability and performance.</p>`,
+task:`Record yourself answering 3 of these questions in English, 1–2 minutes each. Listen back and improve.`,
+ask:`“Do a mock junior QA interview with me. Ask one question at a time and give feedback.”`,
+quiz:{q:"In an interview, you’re asked to “test this pen”. What is the best approach?",o:["Say it’s impossible","Ask questions about requirements, then cover functional, negative, usability and durability checks","Just say “I would write with it”","Talk only about automation"],a:1,why:"Interviewers want to see structured thinking: clarify requirements first, then cover different test types."}}
+]}
+];
+
+const ALL = MODULES.flatMap(m => m.lessons.map(l => ({...l, mod:m})));
+let done = new Set(), answers = {};
+try { done = new Set(JSON.parse(localStorage.getItem('qa-done') || '[]')); } catch(e) {}
+try { answers = JSON.parse(localStorage.getItem('qa-quiz') || '{}') || {}; } catch(e) { answers = {}; }
+function save(){ try{ localStorage.setItem('qa-done', JSON.stringify([...done])); localStorage.setItem('qa-quiz', JSON.stringify(answers)); }catch(e){} }
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+let current = null;
+
+function renderBar(){
+  $('#ticks').innerHTML = ALL.map(l => `<button class="tick ${done.has(l.id)?'done':''} ${current===l.id?'here':''}" title="${esc(l.title)}" aria-label="${esc(l.title)}${done.has(l.id)?' (passed)':''}" data-go="${l.id}"></button>`).join('');
+  $('#runLabel').textContent = `${done.size} of ${ALL.length} passed`;
+}
+function renderSuite(){
+  $('#suite').innerHTML = MODULES.map((m,i) => {
+    const n = m.lessons.filter(l=>done.has(l.id)).length;
+    return `<div class="mod"><p class="mod-head"><span>${i+1}. ${esc(m.title)}</span><span class="mod-count">${n}/${m.lessons.length}</span></p><ol>${
+      m.lessons.map(l=>`<li><a href="#${l.id}" ${current===l.id?'aria-current="page"':''}><span class="dot ${done.has(l.id)?'done':''}"></span><span>${esc(l.title)}</span></a></li>`).join('')
+    }</ol></div>`;
+  }).join('');
+}
+function renderHome(){
+  current = null;
+  const next = ALL.find(l=>!done.has(l.id));
+  $('#main').innerHTML = `
+  <h1>Learn QA, step by step</h1>
+  <p class="lead">A plain-English course from zero to your first junior QA job: manual testing, Playwright automation and AI skills.</p>
+  <div class="actions" style="border:0;margin-top:20px;padding-top:0">
+    ${next ? `<a class="btn primary" href="#${next.id}">${done.size? 'Continue: '+esc(next.title) : 'Start lesson 1'}</a>` : `<span class="btn passed">All lessons passed. Time to apply!</span>`}
+  </div>
+  <h2>How to use this course</h2>
+  <p>Each lesson has a short explanation, a practice task, and one quiz question. When you finish the task, click <strong>Mark as passed</strong>. Your progress is saved in this browser and shows in the bar at the top.</p>
+  <p>Aim for one lesson a day, about 1–2 hours with the practice task. When you get stuck, ask an AI assistant. Each lesson suggests a question to start with.</p>
+  <h2>Your path</h2>
+  <ul class="overview">${MODULES.map((m,i)=>{const n=m.lessons.filter(l=>done.has(l.id)).length;return `<li><a href="#${m.lessons[0].id}" class="t">${i+1}. ${esc(m.title)}</a><div class="d">${esc(m.desc)} ${m.lessons.length} lessons.</div><div class="meter"><span style="width:${Math.round(n/m.lessons.length*100)}%"></span></div></li>`}).join('')}</ul>
+  <h2>Free resources</h2>
+  <ul class="res">
+    <li><a href="https://playwright.dev/docs/intro" target="_blank" rel="noopener">Playwright official docs</a>: the best place for automation</li>
+    <li><a href="https://www.istqb.org" target="_blank" rel="noopener">ISTQB</a>: Foundation syllabus and sample exams</li>
+    <li><a href="https://javascript.info" target="_blank" rel="noopener">javascript.info</a>: JavaScript basics</li>
+    <li><a href="https://learngitbranching.js.org" target="_blank" rel="noopener">Learn Git Branching</a>: Git, visually</li>
+    <li><a href="https://www.saucedemo.com" target="_blank" rel="noopener">Sauce Demo</a> and <a href="https://demo.playwright.dev/todomvc" target="_blank" rel="noopener">TodoMVC demo</a>: practice websites</li>
+    <li><a href="https://jsonplaceholder.typicode.com" target="_blank" rel="noopener">JSONPlaceholder</a>: free practice API</li>
+  </ul>
+  <p class="small" style="margin-top:40px"><button class="btn" id="reset">Reset my progress</button></p>
+  <p class="small">Created by <a href="https://github.com/avinashdangol" target="_blank" rel="noopener">Avinash Dangol</a>. Free for everyone starting a QA career.</p>`;
+  $('#reset').onclick = () => { if(confirm('Reset all progress and quiz answers?')){ done.clear(); answers={}; save(); route(); } };
+}
+function renderLesson(l){
+  current = l.id;
+  const idx = ALL.findIndex(x=>x.id===l.id), prev = ALL[idx-1], next = ALL[idx+1];
+  const mi = MODULES.indexOf(l.mod)+1;
+  const a = answers[l.id];
+  $('#main').innerHTML = `
+  <p class="crumb">Module ${mi}: ${esc(l.mod.title)}. Lesson ${idx+1} of ${ALL.length}</p>
+  <h1>${esc(l.title)}</h1>
+  ${l.body}
+  <div class="box practice"><h3>Practice task</h3><p>${l.task}</p></div>
+  <div class="box quiz" id="quiz"><h3>Quick check</h3><p>${esc(l.quiz.q)}</p>
+    <div class="opts">${l.quiz.o.map((o,i)=>`<button class="opt" data-i="${i}">${esc(o)}</button>`).join('')}</div>
+    <div class="why" id="why" aria-live="polite"></div></div>
+  <div class="box ask"><h3>Stuck? Ask an AI assistant</h3><p>Try: ${l.ask}</p></div>
+  <div class="actions">
+    ${prev?`<a class="btn" href="#${prev.id}">Previous</a>`:`<a class="btn" href="#start">Course home</a>`}
+    <span class="spacer"></span>
+    <button class="btn ${done.has(l.id)?'passed':'primary'}" id="passBtn">${done.has(l.id)?'Passed ✓ (click to undo)':'Mark as passed'}</button>
+    ${next?`<a class="btn" href="#${next.id}">Next lesson</a>`:`<a class="btn" href="#start">Finish</a>`}
+  </div>`;
+  const showQuiz = pick => {
+    document.querySelectorAll('.opt').forEach(b=>{
+      const i=+b.dataset.i; b.classList.remove('right','wrong');
+      if(i===l.quiz.a) b.classList.add('right'); else if(i===pick) b.classList.add('wrong');
+    });
+    $('#why').innerHTML = (pick===l.quiz.a?'<strong class="r">Correct.</strong> ':'<strong class="w">Not quite.</strong> ')+esc(l.quiz.why);
+  };
+  if(a!==undefined) showQuiz(a);
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{ answers[l.id]=+b.dataset.i; save(); showQuiz(+b.dataset.i); });
+  $('#passBtn').onclick = () => {
+    if(done.has(l.id)) done.delete(l.id); else done.add(l.id);
+    save(); renderLesson(l); renderBar(); renderSuite();
+  };
+}
+function route(){
+  const id = location.hash.slice(1);
+  const l = ALL.find(x=>x.id===id);
+  if(l) renderLesson(l); else renderHome();
+  renderBar(); renderSuite();
+  $('#suite').classList.remove('open'); $('#menuBtn').setAttribute('aria-expanded','false');
+  window.scrollTo(0,0);
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-go]');
+  if(t){ location.hash = t.dataset.go; }
+});
+$('#menuBtn').onclick = () => {
+  const open = $('#suite').classList.toggle('open');
+  $('#menuBtn').setAttribute('aria-expanded', open ? 'true' : 'false');
+};
+window.addEventListener('hashchange', route);
+route();
+</script>
+</body>
+</html>
